@@ -1,31 +1,30 @@
-import { useState, useEffect } from 'react';
-import { nanoid } from 'nanoid';
 import ContactForm from './ContactForm/ContactForm';
 import { Filter } from './Filter/Filter';
 import { ContactList } from './ContactList/ContactList';
+import { useSelector, useDispatch } from 'react-redux';
+import { getContacts } from '../Redux/contacts-selectors';
+import { getFilter } from '../Redux/filter-selectors';
+import { addContact, deleteContact } from '../Redux/contacts-slice';
+import { setFilter } from '../Redux/filter-slice';
 
 export default function App() {
-  const [contacts, setContacts] = useState(() => {
-    return JSON.parse(window.localStorage.getItem('contacts')) ?? [];
-  });
-  const [filter, setFilter] = useState('');
+  const contacts = useSelector(getContacts);
+  const filter = useSelector(getFilter);
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
-
-  const addContact = contact => {
-    setContacts([{ id: nanoid(), ...contact }, ...contacts]);
+  const onAddContact = contact => {
+    const action = addContact(contact);
+    dispatch(action);
   };
 
-  const deleteContact = contactId => {
-    setContacts(contacts =>
-      contacts.filter(contact => contact.id !== contactId)
-    );
+  const onDeleteContact = contactId => {
+    const action = deleteContact(contactId);
+    dispatch(action);
   };
 
   const filterContacts = event => {
-    setFilter(event.currentTarget.value);
+    const action = setFilter(event.currentTarget.value);
+    dispatch(action);
   };
 
   const getFilteredContacts = () => {
@@ -38,12 +37,12 @@ export default function App() {
   return (
     <div>
       <h1>Phonebook</h1>
-      <ContactForm onSubmit={addContact} currentContacts={contacts} />
+      <ContactForm addContact={onAddContact} />
       <h2>Contacts</h2>
-      <Filter value={filter} onFilterChange={filterContacts} />
+      <Filter onFilterChange={filterContacts} />
       <ContactList
         contacts={getFilteredContacts()}
-        deleteContact={deleteContact}
+        deleteContact={onDeleteContact}
       />
     </div>
   );

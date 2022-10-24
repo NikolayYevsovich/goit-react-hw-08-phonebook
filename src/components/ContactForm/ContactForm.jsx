@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
+import { getContacts } from '../../Redux/contacts-selectors';
 
-export default function ContactForm({ onSubmit, currentContacts }) {
+export default function ContactForm({ addContact }) {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+  const currentContacts = useSelector(getContacts);
 
   const handleChange = ({ target: { value, name } }) => {
     switch (name) {
@@ -29,7 +32,7 @@ export default function ContactForm({ onSubmit, currentContacts }) {
       return alert(`${name} is already in contacts .`);
     }
 
-    onSubmit({ name, number });
+    addContact({ name, number });
 
     setName('');
     setNumber('');
@@ -71,12 +74,5 @@ export default function ContactForm({ onSubmit, currentContacts }) {
 }
 
 ContactForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-  currentContacts: PropTypes.arrayOf(
-    PropTypes.exact({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    })
-  ),
+  addContact: PropTypes.func.isRequired,
 };
