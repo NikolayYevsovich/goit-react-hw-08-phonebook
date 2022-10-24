@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { getContacts } from '../../Redux/contacts-selectors';
+import { getContacts } from '../../Redux/Contacts/contacts-selectors';
 
 export default function ContactForm({ addContact }) {
   const [name, setName] = useState('');

@@ -2,10 +2,10 @@ import ContactForm from './ContactForm/ContactForm';
 import { Filter } from './Filter/Filter';
 import { ContactList } from './ContactList/ContactList';
 import { useSelector, useDispatch } from 'react-redux';
-import { getContacts } from '../Redux/contacts-selectors';
-import { getFilter } from '../Redux/filter-selectors';
-import { addContact, deleteContact } from '../Redux/contacts-slice';
-import { setFilter } from '../Redux/filter-slice';
+import { getContacts } from '../Redux/Contacts/contacts-selectors';
+import { getFilter } from '../Redux/Filter/filter-selectors';
+import { addContact, deleteContact } from '../Redux/Contacts/contacts-slice';
+import { setFilter } from '../Redux/Filter/filter-slice';
 
 export default function App() {
   const contacts = useSelector(getContacts);
