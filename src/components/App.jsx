@@ -2,15 +2,24 @@ import ContactForm from './ContactForm/ContactForm';
 import { Filter } from './Filter/Filter';
 import { ContactList } from './ContactList/ContactList';
 import { useSelector, useDispatch } from 'react-redux';
-import { getContacts } from '../Redux/Contacts/contacts-selectors';
-import { getFilter } from '../Redux/Filter/filter-selectors';
-import { addContact, deleteContact } from '../Redux/Contacts/contacts-slice';
+import { selectContacts } from '../Redux/Contacts/contacts-selectors';
+import { selectFilter } from '../Redux/Filter/filter-selectors';
+import {
+  fetchContacts,
+  addContact,
+  deleteContact,
+} from '../Redux/Operations/contacts-operations';
 import { setFilter } from '../Redux/Filter/filter-slice';
+import { useEffect } from 'react';
 
 export default function App() {
-  const contacts = useSelector(getContacts);
-  const filter = useSelector(getFilter);
+  const contacts = useSelector(selectContacts);
+  const filter = useSelector(selectFilter);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   const onAddContact = contact => {
     const action = addContact(contact);
