@@ -2,7 +2,11 @@ import ContactForm from './ContactForm/ContactForm';
 import { Filter } from './Filter/Filter';
 import { ContactList } from './ContactList/ContactList';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectContacts } from '../Redux/Contacts/contacts-selectors';
+import {
+  selectContacts,
+  selectError,
+  selectIsLoading,
+} from '../Redux/Contacts/contacts-selectors';
 import { selectFilter } from '../Redux/Filter/filter-selectors';
 import {
   fetchContacts,
@@ -16,6 +20,8 @@ export default function App() {
   const contacts = useSelector(selectContacts);
   const filter = useSelector(selectFilter);
   const dispatch = useDispatch();
+  const isLoading = useSelector(selectIsLoading);
+  const error = useSelector(selectError);
 
   useEffect(() => {
     dispatch(fetchContacts());
@@ -49,10 +55,14 @@ export default function App() {
       <ContactForm addContact={onAddContact} />
       <h2>Contacts</h2>
       <Filter onFilterChange={filterContacts} />
-      <ContactList
-        contacts={getFilteredContacts()}
-        deleteContact={onDeleteContact}
-      />
+      {!isLoading && contacts.length > 0 && (
+        <ContactList
+          contacts={getFilteredContacts()}
+          deleteContact={onDeleteContact}
+        />
+      )}
+      {isLoading && <p>...is loading</p>}
+      {error && <p>oops, something went wrong</p>}
     </div>
   );
 }
