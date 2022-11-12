@@ -1,14 +1,19 @@
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { selectFilter } from '../../Redux/Filter/filter-selectors';
+import { FilterLabel, FilterInput } from './Filter.styled';
 
 export const Filter = ({ onFilterChange }) => {
   const value = useSelector(selectFilter);
   return (
-    <label>
-      Find contacts by name
-      <input type="text" value={value} onChange={onFilterChange} />
-    </label>
+    <FilterLabel>
+      <FilterInput
+        type="text"
+        value={value}
+        onChange={onFilterChange}
+        placeholder="Find contacts by name"
+      />
+    </FilterLabel>
   );
 };
 

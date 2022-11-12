@@ -1,68 +1,43 @@
-import ContactForm from './ContactForm/ContactForm';
-import { Filter } from './Filter/Filter';
-import { ContactList } from './ContactList/ContactList';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-  selectContacts,
-  selectError,
-  selectIsLoading,
-} from '../Redux/Contacts/contacts-selectors';
-import { selectFilter } from '../Redux/Filter/filter-selectors';
-import {
-  fetchContacts,
-  addContact,
-  deleteContact,
-} from '../Redux/Operations/contacts-operations';
-import { setFilter } from '../Redux/Filter/filter-slice';
 import { useEffect } from 'react';
+import { Rings } from 'react-loader-spinner';
+import { useDispatch, useSelector } from 'react-redux';
+import { current } from '../Redux/Auth/auth-operations';
+import { AppBar } from './AppBar/AppBar';
+import { AppRoutes } from './AppRoutes/AppRoutes';
+import { Container, Loader } from './App.styled';
+import { Footer } from './Footer/Footer';
+import { selectLoadingUserStatus } from '../Redux/Auth/auth-selectors';
 
 export default function App() {
-  const contacts = useSelector(selectContacts);
-  const filter = useSelector(selectFilter);
   const dispatch = useDispatch();
-  const isLoading = useSelector(selectIsLoading);
-  const error = useSelector(selectError);
+  const isLoadingUser = useSelector(selectLoadingUserStatus);
 
   useEffect(() => {
-    dispatch(fetchContacts());
+    dispatch(current());
   }, [dispatch]);
 
-  const onAddContact = contact => {
-    const action = addContact(contact);
-    dispatch(action);
-  };
-
-  const onDeleteContact = contactId => {
-    const action = deleteContact(contactId);
-    dispatch(action);
-  };
-
-  const filterContacts = event => {
-    const action = setFilter(event.currentTarget.value);
-    dispatch(action);
-  };
-
-  const getFilteredContacts = () => {
-    const normalizedFilter = filter.toLowerCase();
-    return contacts.filter(({ name }) =>
-      name.toLowerCase().includes(normalizedFilter)
-    );
-  };
-
   return (
-    <div>
-      <h1>Phonebook</h1>
-      <ContactForm addContact={onAddContact} />
-      <h2>Contacts</h2>
-      <Filter onFilterChange={filterContacts} />
-      {!isLoading && contacts.length > 0 && (
-        <ContactList
-          contacts={getFilteredContacts()}
-          deleteContact={onDeleteContact}
-        />
+    <Container>
+      {isLoadingUser ? (
+        <Loader>
+          <Rings
+            height="350"
+            width="350"
+            color="#4fa94d"
+            radius="6"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+            ariaLabel="rings-loading"
+          />
+        </Loader>
+      ) : (
+        <>
+          <AppBar />
+          <AppRoutes />
+          <Footer />
+        </>
       )}
-      {isLoading && <p>...is loading</p>}
-      {error && <p>oops, something went wrong</p>}
-    </div>
+    </Container>
   );
 }

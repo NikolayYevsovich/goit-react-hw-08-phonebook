@@ -3,7 +3,7 @@ import {
   fetchContacts,
   addContact,
   deleteContact,
-} from '../Operations/contacts-operations';
+} from './contacts-operations';
 
 const contactsSlice = createSlice({
   name: 'contacts',
@@ -18,6 +18,7 @@ const contactsSlice = createSlice({
     },
     [fetchContacts.fulfilled]: (state, action) => {
       state.isLoading = false;
+      state.error = null;
       state.contacts = action.payload;
     },
     [fetchContacts.rejected]: (state, action) => {
